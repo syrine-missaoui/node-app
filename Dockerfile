@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16-Alpine
 RUN mkdir /app 
 WORKDIR /app
 COPY public/ ./public
