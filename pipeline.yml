@@ -1,0 +1,47 @@
+name: CI-pipeline-test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  
+  git-checkout:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v2
+
+  Login-to-dockerhub:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+  docker_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build Docker image
+        run: |
+          docker build -t missaouisyrine/devops-node-app-:1.${{ github.run_number }} .
+
+  docker_push:
+    runs-on: ubuntu-latest
+
+    # steps:
+    #   - name: Log in to Docker Hub
+    #     uses: docker/login-action@v2
+    #     with:
+    #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #       password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push missaouisyrine/devops-node-app:1.${{ github.run_number }}
